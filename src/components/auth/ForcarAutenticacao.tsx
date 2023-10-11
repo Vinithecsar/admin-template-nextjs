@@ -13,10 +13,11 @@ export default function ForcarAutenticacao(props: ForcarAutenticacaoProps) {
   const router = useRouter();
   const { usuario, carregando } = useAuth();
 
-  function renderizarConteudo() {
+  function RenderizarConteudo() {
     return (
       <>
         <Script
+          id="1"
           dangerouslySetInnerHTML={{
             __html: `
       if(!document.cookie?.includes("admin-template-cod3r-auth")) {
@@ -30,7 +31,7 @@ export default function ForcarAutenticacao(props: ForcarAutenticacaoProps) {
     );
   }
 
-  function renderizarCarregando() {
+  function RenderizarCarregando() {
     return (
       <div className="flex h-screen items-center justify-center bg-slate-800">
         <Image src={loading} alt="Carregando página" />
@@ -39,9 +40,9 @@ export default function ForcarAutenticacao(props: ForcarAutenticacaoProps) {
   }
 
   if (!carregando && usuario?.email) {
-    return renderizarConteudo();
+    return RenderizarConteudo();
   } else if (carregando) {
-    return renderizarCarregando();
+    return RenderizarCarregando();
   } else {
     router.push("/autenticacao");
     return null;

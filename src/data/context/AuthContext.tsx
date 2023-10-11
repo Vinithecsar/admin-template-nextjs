@@ -1,10 +1,19 @@
 "use client";
 
-import firebase from "@/firebase/config";
 import Usuario from "@/model/Usuario";
 import { useRouter } from "next/navigation";
 import { createContext, useEffect, useState } from "react";
 import Cookies from "js-cookie";
+import {
+  GoogleAuthProvider,
+  User,
+  createUserWithEmailAndPassword,
+  onIdTokenChanged,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signOut,
+} from "firebase/auth";
+import { auth } from "@/firebase/config";
 
 interface AuthContextProps {
   usuario?: Usuario;
@@ -17,17 +26,15 @@ interface AuthContextProps {
 
 const AuthContext = createContext<AuthContextProps>({});
 
-async function usuarioNormalizado(
-  usuarioFirebase: firebase.User,
-): Promise<Usuario> {
-  const token = await usuarioFirebase.getIdToken();
+async function usuarioNormalizado(user: User): Promise<Usuario> {
+  const token = await user.getIdToken();
   return {
-    uid: usuarioFirebase.uid,
-    nome: usuarioFirebase.displayName,
-    email: usuarioFirebase.email,
+    uid: user.uid,
+    nome: user.displayName,
+    email: user.email,
     token,
-    provedor: usuarioFirebase.providerData[0].providerId,
-    imagemUrl: usuarioFirebase.photoURL,
+    provedor: user.providerId,
+    imagemUrl: user.photoURL,
   };
 }
 
@@ -47,7 +54,7 @@ export function AuthProvider(props: any) {
   const [usuario, setUsuario] = useState<Usuario>(null);
   const [carregando, setCarregando] = useState(true);
 
-  async function configurarSessao(usuarioFirebase: firebase.User) {
+  async function configurarSessao(usuarioFirebase: User) {
     if (usuarioFirebase?.email) {
       const usuario = await usuarioNormalizado(usuarioFirebase);
       setUsuario(usuario);
@@ -65,9 +72,7 @@ export function AuthProvider(props: any) {
   async function login(email: string, senha: string) {
     try {
       setCarregando(true);
-      const resp = await firebase
-        .auth()
-        .signInWithEmailAndPassword(email, senha);
+      const resp = await signInWithEmailAndPassword(auth, email, senha);
 
       if (await configurarSessao(resp.user)) {
         router.push("/");
@@ -80,9 +85,8 @@ export function AuthProvider(props: any) {
   async function cadastrar(email: string, senha: string) {
     try {
       setCarregando(true);
-      const resp = await firebase
-        .auth()
-        .createUserWithEmailAndPassword(email, senha);
+
+      const resp = await createUserWithEmailAndPassword(auth, email, senha);
 
       if (await configurarSessao(resp.user)) {
         router.push("/");
@@ -95,9 +99,8 @@ export function AuthProvider(props: any) {
   async function loginGoogle() {
     try {
       setCarregando(true);
-      const resp = await firebase
-        .auth()
-        .signInWithPopup(new firebase.auth.GoogleAuthProvider());
+      const resp = await signInWithPopup(auth, new GoogleAuthProvider());
+      //const resp = await firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider());
 
       if (await configurarSessao(resp.user)) {
         router.push("/");
@@ -110,7 +113,7 @@ export function AuthProvider(props: any) {
   async function logout() {
     try {
       setCarregando(true);
-      await firebase.auth().signOut();
+      await signOut(auth);
       await configurarSessao(null);
     } finally {
       setCarregando(false);
@@ -119,7 +122,7 @@ export function AuthProvider(props: any) {
 
   useEffect(() => {
     if (Cookies.get("admin-template-cod3r-auth")) {
-      const cancelar = firebase.auth().onIdTokenChanged(configurarSessao);
+      const cancelar = onIdTokenChanged(auth, configurarSessao);
       return () => cancelar();
     } else {
       setCarregando(false);
