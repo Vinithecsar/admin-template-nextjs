@@ -17,7 +17,7 @@ export default function ForcarAutenticacao(props: ForcarAutenticacaoProps) {
     return (
       <>
         <Script
-          id="1"
+          id="82da8601-44a5-4e4b-bee1-06fad832f310"
           dangerouslySetInnerHTML={{
             __html: `
       if(!document.cookie?.includes("admin-template-cod3r-auth")) {
