@@ -11,8 +11,8 @@ interface FormularioProps {
 
 export default function Formulario(props: FormularioProps) {
   const id = props.produto?.id ?? null;
-  const [nome, setNome] = useState(props.produto?.nome ?? "");
-  const [categoria, setCategoria] = useState(props.produto?.categoria ?? "");
+  const [nome, setNome] = useState(props.produto?.nome ?? null);
+  const [categoria, setCategoria] = useState(props.produto?.categoria ?? null);
   const [categoriaId, setCategoriaId] = useState(null);
   const [preco, setPreco] = useState(props.produto?.preco ?? null);
   const [categorias] = useState(props.categorias);
@@ -95,9 +95,11 @@ export default function Formulario(props: FormularioProps) {
 
       <div className="mt-4 flex justify-end">
         <button
-          onClick={() =>
-            props.salvar({ id, nome, categoria, preco, categoriaId })
-          }
+          onClick={() => {
+            if (nome != null && categoriaId != null && preco != null) {
+              props.salvar({ id, nome, categoria, preco, categoriaId });
+            }
+          }}
           className="mb-4 mr-2 rounded-md bg-gradient-to-r from-blue-400 to-blue-700 px-4 py-2 text-white"
         >
           {id ? "Alterar" : "Salvar"}
