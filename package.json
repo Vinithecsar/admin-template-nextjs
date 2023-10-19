@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@tremor/react": "^3.9.2",
     "firebase": "^10.4.0",
     "js-cookie": "^3.0.5",
     "next": "^13.5.4",

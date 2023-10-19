@@ -16,6 +16,7 @@ export default function Tabela(props: TabelaProps) {
         <th className="p-4 text-left">Código</th>
         <th className="p-4 text-left">Produto</th>
         <th className="p-4 text-left">Categoria</th>
+        <th className="p-4 text-left">Preço</th>
         <th className="p-4">Ações</th>
       </tr>
     );
@@ -35,6 +36,8 @@ export default function Tabela(props: TabelaProps) {
           <td className="p-4 text-left">{produto.id}</td>
           <td className="p-4 text-left">{produto.nome}</td>
           <td className="p-4 text-left">{produto.categoria}</td>
+          {/* prettier-ignore */}
+          <td className="p-4 text-left">R${(produto.preco).toFixed(2)}</td>
           <td className="flex justify-center">
             <button
               className="m-1 flex items-center justify-center rounded-full p-2 text-green-600 hover:bg-purple-50"

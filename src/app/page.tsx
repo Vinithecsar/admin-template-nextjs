@@ -15,6 +15,7 @@ export default function Home() {
     setVisivel,
     visivel,
     excluirProduto,
+    categorias,
   } = useProdutos();
 
   return (
@@ -31,8 +32,9 @@ export default function Home() {
               onClick={() => {
                 setProduto({
                   id: null,
-                  nome: "",
-                  categoria: "",
+                  nome: null,
+                  categoria: null,
+                  preco: null,
                 });
                 setVisivel("form");
               }}
@@ -52,6 +54,7 @@ export default function Home() {
           <div className="mt-20 flex w-2/3 flex-col rounded-xl  bg-gradient-to-r from-indigo-500 to-purple-800 ">
             <Formulario
               produto={produto}
+              categorias={categorias}
               cancelar={() => setVisivel("table")}
               atualizarProduto={() => setProduto}
               salvar={salvarProduto}

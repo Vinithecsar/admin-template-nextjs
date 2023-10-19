@@ -10,10 +10,14 @@ export default function useProdutos() {
   const [visivel, setVisivel] = useState<"form" | "table">("table");
   const [produto, setProduto] = useState<Produto>({
     id: null,
-    nome: "",
-    categoria: "",
+    nome: null,
+    categoria: null,
+    preco: null,
   });
   const [produtos, setProdutos] = useState<Produto[]>([]);
+  const [categorias, setCategorias] = useState<{ id: string; nome: string }[]>(
+    [],
+  );
 
   // useEffect(obterTodos, []);
 
@@ -45,9 +49,21 @@ export default function useProdutos() {
         id: doc.id,
         nome: doc.data().nome,
         categoria: doc.data().categoria,
+        preco: doc.data().preco,
       }),
     );
     setProdutos(produtos);
+  });
+
+  onSnapshot(collection(db, "categorias"), (snapshot) => {
+    const categorias: { id: string; nome: string }[] = [];
+    snapshot.docs.map((doc) =>
+      categorias.push({
+        id: doc.id,
+        nome: doc.data().nome,
+      }),
+    );
+    setCategorias(categorias);
   });
 
   return {
@@ -60,5 +76,6 @@ export default function useProdutos() {
     visivel,
     setVisivel,
     excluirProduto,
+    categorias,
   };
 }
