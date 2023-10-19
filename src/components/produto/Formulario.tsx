@@ -13,9 +13,14 @@ export default function Formulario(props: FormularioProps) {
   const id = props.produto?.id ?? null;
   const [nome, setNome] = useState(props.produto?.nome ?? null);
   const [categoria, setCategoria] = useState(props.produto?.categoria ?? null);
-  const [categoriaId, setCategoriaId] = useState(null);
-  const [preco, setPreco] = useState(props.produto?.preco ?? null);
+  const [categoriaId, setCategoriaId] = useState(
+    props.produto?.categoriaId ?? null,
+  );
+  const [preco, setPreco] = useState<number>(props.produto?.preco ?? null);
   const [categorias] = useState(props.categorias);
+  const [carregando, setCarregando] = useState<"normal" | "erro" | "salvando">(
+    "normal",
+  );
 
   const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const categoria = e.target.selectedOptions[0];
@@ -65,12 +70,12 @@ export default function Formulario(props: FormularioProps) {
         <div className={`flex w-3/4 flex-col`}>
           <label className="m-4 font-bold text-white">Categoria</label>
           <select
-            value={categoria}
+            value={categoria ?? ""}
             onChange={handleSelectChange}
             className="mb-4 ml-4 mr-4 rounded-lg border border-purple-500 bg-gray-100 px-4 py-2 text-gray-800 focus:bg-white"
           >
-            <option value="" selected disabled hidden>
-              Categoria escolhida
+            <option value="" disabled hidden>
+              Escolha uma categoria
             </option>
             {categorias.map((cat) => {
               return (
@@ -94,10 +99,30 @@ export default function Formulario(props: FormularioProps) {
       </div>
 
       <div className="mt-4 flex justify-end">
+        {carregando === "erro" ? (
+          <div className="mr-2 flex items-center">
+            <p className="mb-4">Dados inválidos!</p>
+          </div>
+        ) : carregando === "salvando" ? (
+          <div className="mr-2 flex items-center">
+            <p className="mb-4">Salvando ...</p>
+          </div>
+        ) : (
+          false
+        )}
+
         <button
           onClick={() => {
-            if (nome != null && categoriaId != null && preco != null) {
+            if (
+              nome != "" &&
+              categoriaId != null &&
+              preco != null &&
+              preco != 0
+            ) {
+              setCarregando("salvando");
               props.salvar({ id, nome, categoria, preco, categoriaId });
+            } else {
+              setCarregando("erro");
             }
           }}
           className="mb-4 mr-2 rounded-md bg-gradient-to-r from-blue-400 to-blue-700 px-4 py-2 text-white"

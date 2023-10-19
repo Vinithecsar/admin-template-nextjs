@@ -5,6 +5,7 @@ import {
   IconeAjustes,
   IconeCasa,
   IconeDashboard,
+  IconeProdutos,
   IconeSair,
   IconeSino,
 } from "../icons";
@@ -25,6 +26,7 @@ export function MenuLateral() {
       </div>
       <ul className="flex-grow">
         <MenuItem url="/" texto="Início" icone={IconeCasa} />
+        <MenuItem url="/produtos" texto="Produtos" icone={IconeProdutos} />
         <MenuItem url="/ajustes" texto="Ajustes" icone={IconeAjustes} />
         <MenuItem url="/notificacoes" texto="Notificações" icone={IconeSino} />
         <MenuItem url="/dashboard" texto="Dashboard" icone={IconeDashboard} />

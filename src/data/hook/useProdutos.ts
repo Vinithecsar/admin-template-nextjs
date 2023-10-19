@@ -12,6 +12,7 @@ export default function useProdutos() {
     id: null,
     nome: null,
     categoria: null,
+    categoriaId: null,
     preco: null,
   });
   const [produtos, setProdutos] = useState<Produto[]>([]);
@@ -49,6 +50,7 @@ export default function useProdutos() {
         id: doc.id,
         nome: doc.data().nome,
         categoria: doc.data().categoria,
+        categoriaId: doc.data().categoriaId,
         preco: doc.data().preco,
       }),
     );
